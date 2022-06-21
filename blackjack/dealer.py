@@ -1,6 +1,7 @@
 class Player:
 
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.all_cards = []
 
 
@@ -16,4 +17,4 @@ class Player:
 
 
     def __str__(self):
-        return "Player has {} cards".format(len(self.all_cards))
+        return "Player {} has {} cards".format(self.name, len(self.all_cards))

@@ -4,11 +4,7 @@ import pytest
 
 @pytest.fixture
 def example_player():
-    return Player("Eleanor")
-
-
-def test_example_player_name(example_player):
-    assert example_player.name == "Eleanor"
+    return Player()
 
 
 def test_example_player_empty_deck_initially(example_player):
