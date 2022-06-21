@@ -2,7 +2,7 @@
 name = "BlackJack"
 version = "0.1.0"
 description = ""
-authors = ["eleanor.bracegirdle@bjss.com <eleanor.bracegirdle@bjss.com>"]
+authors = ["Eleanor Bracegirdle <eleanor.bracegirdle@bjss.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
