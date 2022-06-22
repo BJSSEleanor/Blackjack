@@ -1,5 +1,6 @@
 from blackjack.player import Player
 from blackjack.deck import Deck
+from blackjack.card import Card
 import pytest
 
 @pytest.fixture
@@ -31,3 +32,19 @@ def test_player_given_multiple_cards(example_player,example_deck):
         new_cards.append(card)
     example_player.add_cards(new_cards)
     assert example_player.all_cards == new_cards
+
+
+@pytest.fixture
+def example_cards():
+    return [Card("Diamond","Two"), Card("Hearts","King")]
+
+
+def test_calculate_total(example_player, example_cards):
+    example_player.add_cards(example_cards)
+    assert example_player.total == 12
+    
+
+
+def test_under_21(example_player, example_cards):
+    example_player.add_cards(example_cards)
+    assert example_player.under_21() == True
