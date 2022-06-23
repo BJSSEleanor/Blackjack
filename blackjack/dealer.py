@@ -21,10 +21,7 @@ class Dealer:
 
     
     def under_21(self):
-        total = 0
-        for card in self.all_cards:
-            total += card.value
-        if total < 21:
+        if self.total < 21:
             return True
         else:
             return False

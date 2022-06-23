@@ -8,7 +8,6 @@ from blackjack.dealer import Dealer
 class Blackjack:
     def __init__(self):
         self.play = True
-        self.won = False
         self.winner = ""
         self.deck = Deck()
         self.deck.shuffle()
@@ -20,7 +19,6 @@ class Blackjack:
     
     def reset_game(self):
         self.play = True
-        self.won = False
         self.winner = ""
         self.deck = Deck()
         self.deck.shuffle()
@@ -56,7 +54,10 @@ class Blackjack:
                     print("Not a valid input, please provide a number between 1 and 20")
                 else:
                     valid_player_bet = self.player.bet(player_bet)
-                    self.player_bet = player_bet
+                    if valid_player_bet == True:
+                        self.player_bet = player_bet
+                    else:
+                        print("You do not have enough chips!\nYou have {} chips available".format(len(self.player.all_chips)))
         print("Your bet has been successful!\nA bet of {} has been placed".format(player_bet*10))
 
 
@@ -68,44 +69,54 @@ class Blackjack:
             self.reset_game
 
 
+    
+
+    def dealer_turn(self):
+        player_under_21 = self.player.under_21()
+        if player_under_21:
+            self.dealer.add_cards(self.deck.deal_one())
+            print(self.dealer)
+            dealer_under_21 = self.dealer.under_21()
+            while dealer_under_21 and self.dealer.total < self.player.total:
+                self.dealer.hit(self.deck.deal_one())
+                print(self.dealer)
+                dealer_under_21 = self.dealer.under_21()
+            if self.dealer.total > self.player.total and dealer_under_21:
+                self.winner = "Dealer"
+                print("The Dealer has won!")
+            else:
+                self.winner = "Player"
+                print("You have won!")
+        else:
+            self.winner = "Dealer"
+            print("The Dealer has won!")
+
+    def player_turn(self):
+        stand = False
+        while not stand:
+            player_choice = self.get_player_input()
+            if player_choice == "h":
+                self.player.hit(self.deck.deal_one())
+            else: #player_choice == "s":
+                self.player.stay()
+                stand = True
+            print(self.player)
+
+
     def play_blackjack(self):
         while self.play:
-            while not self.won:
-                self.get_player_bet()
-                self.dealer.add_cards([self.deck.deal_one(),self.deck.deal_one()])
-                print("The Dealer's first card is: /n{}".format(self.dealer.all_cards[0]))
-                self.player.add_cards([self.deck.deal_one(),self.deck.deal_one()])
-                print(self.player)
-                #player turn
-                player_choice = self.get_player_input()
-                if player_choice == "h":
-                    self.player.hit(self.deck.deal_one())
-                elif player_choice == "s":
-                    self.player.stay()
-                #dealer's turn
-                player_under_21 = self.player.under_21()
-                
-                if player_under_21:
-                    self.dealer.add_cards(self.deck.deal_one())
-                    dealer_under_21 = self.dealer.under_21()
-                    while dealer_under_21 and self.dealer.total < self.player.total:
-                        self.dealer.hit(self.deck.deal_one())
-                    if self.dealer.total > self.player.total and dealer_under_21:
-                        self.winner = "Dealer"
-                        print("The Dealer has won!")
-                        self.won = True
-                    else:
-                        self.winner = "Player"
-                        print("You have won!")
-                        self.won = True
-                else:
-                    self.winner = "Dealer"
-                    print("The Dealer has won!")
-                    self.won = True
+            self.get_player_bet()
+            self.dealer.add_cards([self.deck.deal_one(),self.deck.deal_one()])
+            print("The Dealer's first card is: /n{}".format(self.dealer.all_cards[0]))
+            self.player.add_cards([self.deck.deal_one(),self.deck.deal_one()])
+            print(self.player)
+            #player turn
+            self.player_turn()
+            #dealer's turn
+            print(self.dealer)
+            self.dealer_turn()
             if self.winner == "Player":
                 print("You have won your bet of {} back!".format(self.player_bet))
                 self.player.add_chips(self.player_bet)
             self.ask_play_again()
-
-
 
