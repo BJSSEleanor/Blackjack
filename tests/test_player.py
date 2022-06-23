@@ -12,6 +12,37 @@ def test_example_player_empty_deck_initially(example_player):
     assert example_player.all_cards == []
 
 
+def test_example_player_20_chips_initially(example_player):
+    assert len(example_player.all_chips) == 20
+
+
+def test_add_chips_increases_chip_no(example_player):
+    example_player.add_chips(5)
+    assert len(example_player.all_chips) == 25
+
+
+def test_place_bet_remove_chips_with_enough_chips_succeeds(example_player):
+    success = example_player.bet(5)
+    assert success == True
+
+
+def test_place_bet_remove_chips_with_enough_chips_decreases_chip_amount(example_player):
+    success = example_player.bet(5)
+    assert len(example_player.all_chips) == 15
+
+
+def test_place_bet_remove_chips_with_not_enough_chips(example_player):
+    example_player.all_chips = []
+    success = example_player.bet(5)
+    assert success == False
+
+
+def test_place_bet_remove_chips_with_not_enough_chips_doesnt_decreases_chip_amount(example_player):
+    example_player.all_chips = []
+    success = example_player.bet(5)
+    assert len(example_player.all_chips) == 0
+
+
 @pytest.fixture
 def example_deck():
     return Deck()
